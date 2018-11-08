@@ -43,6 +43,15 @@ struct sparse_vec {
         if (duplets.size() == 0) {
             return;
         }
+//        for (int k = 0; k < duplets.size(); ++k) {
+//            if (abs(real(duplets[k].val)) < tol) {
+//                duplets[k].val -= real(duplets[k].val);
+//            }
+//            if (abs(imag(duplets[k].val)) < tol) {
+//                duplets[k].val -= imag(duplets[k].val);
+//            }
+//
+//        }
 
 
         for (int i = duplets.size() - 1; i > 0; --i) {
@@ -66,15 +75,6 @@ struct sparse_vec {
             }
         }
 
-        for (int k = 0; k < duplets.size(); ++k) {
-            if (abs(real(duplets[k].val)) < tol) {
-                duplets[k].val -= real(duplets[k].val);
-            }
-            if (abs(imag(duplets[k].val)) < tol) {
-                duplets[k].val -= imag(duplets[k].val);
-            }
-
-        }
 
     }
 
@@ -98,6 +98,17 @@ struct sparse_vec {
 
 
         return 0;
+    }
+
+    static sparse_vec swap(const sparse_vec &a) {
+        sparse_vec vec(a.len);
+        for (int i = 0; i < a.duplets.size(); ++i) {
+            double realteil = real(a.duplets[i].val);
+            double imag2 = imag(a.duplets[i].val);
+            int ind = a.duplets[i].ind;
+            vec.append(ind, complex<double>(imag2, realteil));
+        }
+        vec.cleanup();
     }
 
     static sparse_vec cwise_mult(const sparse_vec &a, const sparse_vec &b) {
@@ -148,7 +159,7 @@ struct sparse_vec {
             T a = 0;
 
             for (int j = 0; j < n; ++j) {
-                auto num = 2 * PI * i * j / n;
+                auto num = (2 * PI * i * j) / n;
                 auto real = cos(num);
                 auto imag = sin(num);
                 a += x.get_val(j) * (real - I * imag);
@@ -165,26 +176,50 @@ struct sparse_vec {
 
     static sparse_vec ifft(const sparse_vec &x) {
         double n = x.len;
-        sparse_vec vec = x;
+        sparse_vec vec = swap(x);
+        fft(vec);
+        return swap(vec);
 
-        for (int i = 1; i < n; ++i) {
-            vec.duplets[i].ind = n - i;
-        }
-        vec.cleanup();
-
-        vec = fft(vec);
-
-        for (int j = 0; j < n; ++j) {
-            vec.duplets[j].val /= 4;
-        }
-
-
-        return vec;
+//
+//        sparse_vec vec = x;
+//
+//        int left = 1;
+//        int right = n;
+//
+//
+//        for (int i = 1; i < n; ++i) {
+//            vec.duplets[i].ind = n - vec.duplets[i].ind;
+//        }
+//        vec.cleanup();
+//
+//        vec = fft(vec);
+//
+//        for (int j = 0; j < n; ++j) {
+//            vec.duplets[j].val /= 4;
+//        }
+//
+//
+//        return vec;
     }
 
     static sparse_vec conv_fft(sparse_vec a, sparse_vec b) {
-        //TODO
-        return a;
+        int size = a.len + b.len - 1;
+        a.len = size;
+        b.len = size;
+
+        auto fftA = fft(a);
+        print(fftA);
+        auto fftB = fft(b);
+        print(fftB);
+
+        auto product = cwise_mult(fftA, fftB);
+//        auto product = fftA * fftB;
+        print(product);
+
+        auto ifftAB = ifft(product);
+
+
+        return ifftAB;
     }
 
     std::string to_string() const {
@@ -219,7 +254,14 @@ int main() {
     example.append(2, complex<double>(0, -1));
     example.append(3, complex<double>(-1, +2));
     print(example);
-    auto result = sparse_vec<complex<double> >::ifft(example);
+
+    sparse_vec<complex<double> > example2(4);
+    example2.append(0, complex<double>(1, 0));
+    example2.append(1, complex<double>(2, -1));
+    example2.append(2, complex<double>(0, -1));
+    example2.append(3, complex<double>(-1, +2));
+    print(example2);
+    auto result = sparse_vec<complex<double> >::conv_fft(example, example2);
     print(result);
 
 
