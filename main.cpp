@@ -40,6 +40,10 @@ struct sparse_vec {
     }
 
     void cleanup() {
+        if (duplets.size() == 0) {
+            return;
+        }
+
         for (int i = duplets.size() - 1; i > 0; --i) {
             if (duplets[i].ind > len - 1 || abs(duplets[i].val) < tol) {
                 duplets.erase(duplets.begin() + i);
@@ -65,7 +69,24 @@ struct sparse_vec {
     }
 
     T get_val(int ind) const {
-        //TODO
+//        BinarySearch
+        long links = 0;
+        long rechts = duplets.size() - 1;
+
+        while (links <= rechts) {
+            long mitte = links + (rechts - links) / 2;
+
+            if (duplets[mitte].ind == ind) {
+                return duplets[mitte].val;
+            } else if (duplets[mitte].ind > ind) {
+                rechts = mitte - 1;
+            } else {
+                links = mitte + 1;
+            }
+
+        }
+
+
         return 0;
     }
 
@@ -126,9 +147,17 @@ void print(sparse_vec<complex<double> > &x) {
 /***** TESTING ******/
 
 int main() {
+//    sparse_vec<complex<double> > example(6);
+//    example.append(4, complex<double>(6, -1));
+//    example.append(1, complex<double>(1e-7, 0));
+//    example.append(22, complex<double>(9, 0));
+//    example.append(4, complex<double>(1, +2));
+//    example.append(2, complex<double>(1, 0));
+//    example.cleanup();
+//    print(example);
+
 
     sparse_vec<complex<double> > x(5);
-
     x.append(4, complex<double>(0, 4));
     x.append(0, complex<double>(8.2, 0));
     x.append(1, complex<double>(1, -2));
