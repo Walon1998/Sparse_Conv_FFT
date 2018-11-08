@@ -63,9 +63,6 @@ struct sparse_vec {
         }
 
 
-
-
-        //TODO
     }
 
     T get_val(int ind) const {
@@ -92,7 +89,22 @@ struct sparse_vec {
 
     static sparse_vec cwise_mult(const sparse_vec &a, const sparse_vec &b) {
         sparse_vec out(max(a.len, b.len));
-        //TODO
+
+        int i = 0;
+        int j = 0;
+        while (i < a.len && j < b.len) {
+            if (a.duplets[i].ind == b.duplets[j].ind) {
+                out.append(a.duplets[i].ind, a.duplets[i].val * b.duplets[j].val);
+                i++;
+                j++;
+            } else if (a.duplets[i].ind > b.duplets[j].ind) {
+                j++;
+            } else {
+                i++;
+            }
+        }
+
+
         return out;
     }
 
