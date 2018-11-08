@@ -44,10 +44,14 @@ struct sparse_vec {
             return;
         }
 
+
         for (int i = duplets.size() - 1; i > 0; --i) {
+
+
             if (duplets[i].ind > len - 1 || abs(duplets[i].val) < tol) {
                 duplets.erase(duplets.begin() + i);
             }
+
         }
 
         sort(duplets.begin(), duplets.end(), [](duplet<T> x, duplet<T> y) { return x.ind < y.ind; });
@@ -62,6 +66,15 @@ struct sparse_vec {
             }
         }
 
+        for (int k = 0; k < duplets.size(); ++k) {
+            if (abs(real(duplets[k].val)) < tol) {
+                duplets[k].val -= real(duplets[k].val);
+            }
+            if (abs(imag(duplets[k].val)) < tol) {
+                duplets[k].val -= imag(duplets[k].val);
+            }
+
+        }
 
     }
 
@@ -129,19 +142,17 @@ struct sparse_vec {
     static sparse_vec fft(const sparse_vec &x) {
         int n = x.len;
         sparse_vec tot(n);
-        auto g = exp(2*PI*I/(double)n);
-        cout << g;
 
         for (int i = 0; i < n; ++i) {
 
             T a = 0;
 
             for (int j = 0; j < n; ++j) {
+                auto num = 2 * PI * i * j / n;
+                auto real = cos(num);
+                auto imag = sin(num);
+                a += x.get_val(j) * (real - I * imag);
 
-//                a += x.get_val(j) * (cos((2 * PI * i * j) / n) - I * (sin(2 * PI * i * j) / n));
-//                a += x.duplets[j].val * (cos((2 * PI * i * j) / n) - I * (sin(2 * PI * i * j) / n));
-
-//                a += x.get_val(j) * exp(I * -2.0 * PI * (double) i * (double) j) / (double) n ;
 
             }
 
