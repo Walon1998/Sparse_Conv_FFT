@@ -109,8 +109,20 @@ struct sparse_vec {
     }
 
     static sparse_vec conv(const sparse_vec &a, const sparse_vec &b) {
-        sparse_vec out(a.len + b.len - 1);
-        //TODO
+//        Ist schneller möglich...
+        int size = a.len + b.len - 1;
+        sparse_vec out(size);
+
+        for (int k = 0; k < size; ++k) {
+            T x = 0;
+            for (int i = 0; i < k; ++i) {
+                x += a.get_val(i) * b.get_val(k - i);
+            }
+
+            out.append(k, x);
+        }
+        out.cleanup();
+
         return out;
     }
 
