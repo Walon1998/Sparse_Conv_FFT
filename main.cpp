@@ -129,7 +129,26 @@ struct sparse_vec {
     static sparse_vec fft(const sparse_vec &x) {
         int n = x.len;
         sparse_vec tot(n);
-        //TODO
+        auto g = exp(2*PI*I/(double)n);
+        cout << g;
+
+        for (int i = 0; i < n; ++i) {
+
+            T a = 0;
+
+            for (int j = 0; j < n; ++j) {
+
+//                a += x.get_val(j) * (cos((2 * PI * i * j) / n) - I * (sin(2 * PI * i * j) / n));
+//                a += x.duplets[j].val * (cos((2 * PI * i * j) / n) - I * (sin(2 * PI * i * j) / n));
+
+//                a += x.get_val(j) * exp(I * -2.0 * PI * (double) i * (double) j) / (double) n ;
+
+            }
+
+
+            tot.append(i, a);
+        }
+        tot.cleanup();
         return tot;
     }
 
@@ -171,14 +190,14 @@ void print(sparse_vec<complex<double> > &x) {
 /***** TESTING ******/
 
 int main() {
-//    sparse_vec<complex<double> > example(6);
-//    example.append(4, complex<double>(6, -1));
-//    example.append(1, complex<double>(1e-7, 0));
-//    example.append(22, complex<double>(9, 0));
-//    example.append(4, complex<double>(1, +2));
-//    example.append(2, complex<double>(1, 0));
-//    example.cleanup();
-//    print(example);
+    sparse_vec<complex<double> > example(4);
+    example.append(0, complex<double>(1, 0));
+    example.append(1, complex<double>(2, -1));
+    example.append(2, complex<double>(0, -1));
+    example.append(3, complex<double>(-1, +2));
+    print(example);
+    auto result = sparse_vec<complex<double> >::fft(example);
+    print(result);
 
 
     sparse_vec<complex<double> > x(5);
