@@ -165,9 +165,21 @@ struct sparse_vec {
 
     static sparse_vec ifft(const sparse_vec &x) {
         double n = x.len;
-        sparse_vec out(n);
-        //TODO
-        return out;
+        sparse_vec vec = x;
+
+        for (int i = 1; i < n; ++i) {
+            vec.duplets[i].ind = n - i;
+        }
+        vec.cleanup();
+
+        vec = fft(vec);
+
+        for (int j = 0; j < n; ++j) {
+            vec.duplets[j].val /= 4;
+        }
+
+
+        return vec;
     }
 
     static sparse_vec conv_fft(sparse_vec a, sparse_vec b) {
@@ -207,7 +219,7 @@ int main() {
     example.append(2, complex<double>(0, -1));
     example.append(3, complex<double>(-1, +2));
     print(example);
-    auto result = sparse_vec<complex<double> >::fft(example);
+    auto result = sparse_vec<complex<double> >::ifft(example);
     print(result);
 
 
