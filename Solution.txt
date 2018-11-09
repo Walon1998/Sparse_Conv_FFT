@@ -1,0 +1,2 @@
+Exercise 4.1. (Long exercise) Sparse vectors, their convolution and FFT
+d) yes if |sz_a| = 1 und |sz_b| = n. Dann läuft conf_fft in O(n log n) und conv in O(n)

@@ -138,7 +138,6 @@ struct sparse_vec {
 
     static sparse_vec conv(const sparse_vec &a, const sparse_vec &b) {
 //        Ist schneller möglich...
-// TODO
         int size = a.len + b.len - 1;
         sparse_vec out(size);
 
