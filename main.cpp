@@ -107,18 +107,19 @@ struct sparse_vec {
         sparse_vec vec(a.len);
         for (int i = 0; i < a.duplets.size(); ++i) {
             double realteil = real(a.duplets[i].val);
-            double imag2 = imag(a.duplets[i].val);
+            double imaginaerteil = imag(a.duplets[i].val);
             int ind = a.duplets[i].ind;
-            vec.append(ind, complex<double>(imag2, realteil));
+            vec.append(ind, complex<double>(imaginaerteil, realteil));
         }
         vec.cleanup();
+        return vec;
     }
 
     static sparse_vec cwise_mult(const sparse_vec &a, const sparse_vec &b) {
         sparse_vec out(max(a.len, b.len));
 
-        int i = 0;
-        int j = 0;
+        int i = 0; // a
+        int j = 0; // b
         while (i < a.len && j < b.len) {
             if (a.duplets[i].ind == b.duplets[j].ind) {
                 out.append(a.duplets[i].ind, a.duplets[i].val * b.duplets[j].val);
@@ -137,6 +138,7 @@ struct sparse_vec {
 
     static sparse_vec conv(const sparse_vec &a, const sparse_vec &b) {
 //        Ist schneller möglich...
+// TODO
         int size = a.len + b.len - 1;
         sparse_vec out(size);
 
@@ -180,8 +182,14 @@ struct sparse_vec {
     static sparse_vec ifft(const sparse_vec &x) {
         double n = x.len;
         sparse_vec vec = swap(x);
-        fft(vec);
-        return swap(vec);
+        vec = fft(vec);
+        vec = swap(vec);
+
+        for (int i = 0; i < vec.duplets.size(); ++i) {
+            vec.duplets[i].val /= n;
+        }
+
+        return vec;
 
 //
 //        sparse_vec vec = x;
@@ -254,11 +262,11 @@ int main() {
     sparse_vec<complex<double> > example(4);
     example.append(0, complex<double>(1, 0));
     example.append(1, complex<double>(2, -1));
-    example.append(2, complex<double>(0, -1));
+    // example.append(2, complex<double>(0, -1));
     example.append(3, complex<double>(-1, +2));
     example.cleanup();
-
-    print(example);
+    auto result = sparse_vec<complex<double> >::ifft(example);
+    print(result);
 
 //    sparse_vec<complex<double> > example2(4);
 //    example2.append(0, complex<double>(1, 0));
