@@ -156,6 +156,7 @@ struct sparse_vec {
     }
 
     static sparse_vec fft(const sparse_vec &x) {
+        // Schneller möglich
         int n = x.len;
         sparse_vec tot(n);
 
@@ -191,26 +192,6 @@ struct sparse_vec {
 
         return vec;
 
-//
-//        sparse_vec vec = x;
-//
-//        int left = 1;
-//        int right = n;
-//
-//
-//        for (int i = 1; i < n; ++i) {
-//            vec.duplets[i].ind = n - vec.duplets[i].ind;
-//        }
-//        vec.cleanup();
-//
-//        vec = fft(vec);
-//
-//        for (int j = 0; j < n; ++j) {
-//            vec.duplets[j].val /= 4;
-//        }
-//
-//
-//        return vec;
     }
 
     static sparse_vec conv_fft(sparse_vec a, sparse_vec b) {
@@ -224,7 +205,6 @@ struct sparse_vec {
 //        print(fftB);
 
         auto product = cwise_mult(fftA, fftB);
-//        auto product = fftA * fftB;
 //        print(product);
 
         auto ifftAB = ifft(product);
@@ -259,23 +239,7 @@ void print(sparse_vec<complex<double> > &x) {
 /***** TESTING ******/
 
 int main() {
-//    sparse_vec<complex<double> > example(4);
-//    example.append(0, complex<double>(1, 0));
-//    example.append(1, complex<double>(2, -1));
-//    example.append(2, complex<double>(0, -1));
-//    example.append(3, complex<double>(-1, +2));
-//    example.cleanup();
-//    auto result = sparse_vec<complex<double> >::ifft(example);
-//    print(result);
 
-//    sparse_vec<complex<double> > example2(4);
-//    example2.append(0, complex<double>(1, 0));
-//    example2.append(1, complex<double>(2, -1));
-//    example2.append(2, complex<double>(0, -1));
-//    example2.append(3, complex<double>(-1, +2));
-//    print(example2);
-//    auto result = sparse_vec<complex<double> >::conv_fft(example, example2);
-//    print(result);
 
 
     sparse_vec<complex<double> > x(5);
