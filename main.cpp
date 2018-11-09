@@ -43,27 +43,16 @@ struct sparse_vec {
     }
 
     void cleanup() {
+
         if (duplets.size() == 0) {
             return;
         }
-//        for (int k = 0; k < duplets.size(); ++k) {
-//            if (abs(real(duplets[k].val)) < tol) {
-//                duplets[k].val -= real(duplets[k].val);
-//            }
-//            if (abs(imag(duplets[k].val)) < tol) {
-//                duplets[k].val -= imag(duplets[k].val);
-//            }
-//
-//        }
 
 
-        for (int i = duplets.size() - 1; i > 0; --i) {
-
-
-            if (duplets[i].ind > len - 1 || abs(duplets[i].val) < tol) {
+        for (int i = 0; i < duplets.size(); ++i) {
+            if (duplets[i].ind > len - 1 || abs(duplets[i].val) <= tol) {
                 duplets.erase(duplets.begin() + i);
             }
-
         }
 
         sort(duplets.begin(), duplets.end(), [](duplet<T> x, duplet<T> y) { return x.ind < y.ind; });
@@ -76,6 +65,17 @@ struct sparse_vec {
                 j--;
 
             }
+        }
+
+        for (int k = 0; k < duplets.size(); ++k) {
+            if (abs(real(duplets[k].val)) <= tol) {
+
+                duplets[k].val = complex<double>(0, imag(duplets[k].val));
+            }
+            if (abs(imag(duplets[k].val)) <= tol) {
+                duplets[k].val = complex<double>(real(duplets[k].val), 0);
+            }
+
         }
 
 
@@ -256,16 +256,18 @@ int main() {
     example.append(1, complex<double>(2, -1));
     example.append(2, complex<double>(0, -1));
     example.append(3, complex<double>(-1, +2));
+    example.cleanup();
+
     print(example);
 
-    sparse_vec<complex<double> > example2(4);
-    example2.append(0, complex<double>(1, 0));
-    example2.append(1, complex<double>(2, -1));
-    example2.append(2, complex<double>(0, -1));
-    example2.append(3, complex<double>(-1, +2));
-    print(example2);
-    auto result = sparse_vec<complex<double> >::conv_fft(example, example2);
-    print(result);
+//    sparse_vec<complex<double> > example2(4);
+//    example2.append(0, complex<double>(1, 0));
+//    example2.append(1, complex<double>(2, -1));
+//    example2.append(2, complex<double>(0, -1));
+//    example2.append(3, complex<double>(-1, +2));
+//    print(example2);
+//    auto result = sparse_vec<complex<double> >::conv_fft(example, example2);
+//    print(result);
 
 
     sparse_vec<complex<double> > x(5);
