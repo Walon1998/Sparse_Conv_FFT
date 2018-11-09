@@ -219,13 +219,13 @@ struct sparse_vec {
         b.len = size;
 
         auto fftA = fft(a);
-        print(fftA);
+//        print(fftA);
         auto fftB = fft(b);
-        print(fftB);
+//        print(fftB);
 
         auto product = cwise_mult(fftA, fftB);
 //        auto product = fftA * fftB;
-        print(product);
+//        print(product);
 
         auto ifftAB = ifft(product);
 
@@ -259,14 +259,14 @@ void print(sparse_vec<complex<double> > &x) {
 /***** TESTING ******/
 
 int main() {
-    sparse_vec<complex<double> > example(4);
-    example.append(0, complex<double>(1, 0));
-    example.append(1, complex<double>(2, -1));
-    // example.append(2, complex<double>(0, -1));
-    example.append(3, complex<double>(-1, +2));
-    example.cleanup();
-    auto result = sparse_vec<complex<double> >::ifft(example);
-    print(result);
+//    sparse_vec<complex<double> > example(4);
+//    example.append(0, complex<double>(1, 0));
+//    example.append(1, complex<double>(2, -1));
+//    example.append(2, complex<double>(0, -1));
+//    example.append(3, complex<double>(-1, +2));
+//    example.cleanup();
+//    auto result = sparse_vec<complex<double> >::ifft(example);
+//    print(result);
 
 //    sparse_vec<complex<double> > example2(4);
 //    example2.append(0, complex<double>(1, 0));
