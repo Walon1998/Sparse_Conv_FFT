@@ -36,7 +36,10 @@ struct sparse_vec {
     }
 
     void append(int ind, T val) {
-        this->duplets.push_back(duplet(ind, val));
+        if (abs(val) >= tol) {
+            this->duplets.push_back(duplet(ind, val));
+        }
+
     }
 
     void cleanup() {
